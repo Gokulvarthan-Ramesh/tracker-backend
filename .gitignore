@@ -1,0 +1,19 @@
+# Composer vendor directory
+/vendor
+
+# IDE files
+/.idea
+
+# Homestead files
+Homestead.json
+Homestead.yaml
+
+# Environment variables
+.env
+
+# PHPUnit cache file
+.phpunit.result.cache
+
+# Optional: OS generated files
+.DS_Store
+Thumbs.db
