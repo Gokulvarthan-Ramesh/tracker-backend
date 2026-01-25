@@ -8,14 +8,28 @@
 |--------------------------------------------------------------------------
 |
 | Here is where you can register all of the routes for an application.
-| It is a breeze. Simply tell Lumen the URIs it should respond to
-| and give it the Closure to call when that URI is requested.
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
-$router->get('/test', function () {
-    return response()->json(['message' => 'Test route is working!']);
+// Root route (app version)
+$router->get('/', [
+    'as' => 'app.version',
+    function () use ($router) {
+        return [
+            'version' => $router->app->version(),
+            'route_name' => app('request')->route()[1]['as'] ?? null,
+        ];
+    }
+]);
+
+
+// Versioned API routes (only register)
+$router->group(['prefix' => 'api/v1'], function () use ($router) {
+
+    // Auth registration route
+    $router->post('/register', 'AuthController@register');
+    $router->post('/login', 'AuthController@login');
+    $router->group(['middleware' => 'auth'], function () use ($router) {
+        $router->post('/logout', 'AuthController@logout');
+    });
 });
