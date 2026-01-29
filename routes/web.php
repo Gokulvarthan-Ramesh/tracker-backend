@@ -30,6 +30,11 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->post('/register', 'AuthController@register');
     $router->post('/login', 'AuthController@login');
     $router->group(['middleware' => 'auth'], function () use ($router) {
+        $router->get('/userInfo', 'UserController@info');
+        $router->get('/study', 'StudyController@index');
+        $router->post('/study', 'StudyController@store');       
+        $router->put('/study/{id}', 'StudyController@update');   
+        $router->delete('/study/{id}', 'StudyController@destroy'); 
         $router->post('/logout', 'AuthController@logout');
     });
 });
