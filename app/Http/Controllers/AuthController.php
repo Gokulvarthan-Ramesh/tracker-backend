@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\ApiResponse;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -31,5 +32,33 @@ class AuthController extends Controller
         ]);
 
         return ApiResponse::success(['user' => $user], 'User registered successfully', 201);
+    }
+
+    public function login(Request $request)
+    {
+        $this->validate($request, [
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return ApiResponse::error('Invalid credentials', 401);
+        }
+
+        $token = JWTAuth::fromUser($user);
+
+        return ApiResponse::success(['user' => $user, 'token' => $token,], 'Login successful');
+    }
+
+    public function logout(Request $request)
+    {
+        try {
+            JWTAuth::invalidate(JWTAuth::getToken());
+            return ApiResponse::success([], 'User logged out successfully');
+        } catch (\Exception $e) {
+            return ApiResponse::error('Failed to logout, please try again.', 500);
+        }
     }
 }

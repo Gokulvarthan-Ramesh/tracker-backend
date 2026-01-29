@@ -24,6 +24,8 @@ $app = new Laravel\Lumen\Application(
 );
 
 $app->withFacades();
+$app->configure('jwt');
+$app->configure('auth');
 
 $app->withEloquent();
 $app->register(Illuminate\Database\MigrationServiceProvider::class);
@@ -38,7 +40,7 @@ $app->register(Illuminate\Database\MigrationServiceProvider::class);
 | your own bindings here if you like or you can make another file.
 |
 */
-
+$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
     App\Exceptions\Handler::class
@@ -77,9 +79,13 @@ $app->configure('app');
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\AuthMiddleware::class,
+]);
+$app->middleware([
+    App\Http\Middleware\CorsMiddleware::class,
+]);
+
 
 /*
 |--------------------------------------------------------------------------
@@ -93,7 +99,7 @@ $app->configure('app');
 */
 
 // $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
 /*
