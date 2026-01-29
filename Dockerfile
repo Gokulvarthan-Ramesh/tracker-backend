@@ -1,18 +1,20 @@
 FROM php:8.2-cli
 
-#install system deps
-RUN apt-get update && apt-get install-y\git unzip libzip-dev zip
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git unzip libzip-dev zip
 
-# install composer
-
+# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 
-COPY ..
+# Copy project files
+COPY . .
 
-RUN composer -install --no-dev --optimize-autoloader
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
 
 EXPOSE 10000
 
-CMD php -S 0.0.0.0:10000 -t public
+CMD ["php", "-S", "0.0.0.0:10000", "-t", "public"]
