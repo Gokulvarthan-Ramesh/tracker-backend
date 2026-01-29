@@ -53,7 +53,7 @@ class StudyController extends Controller
             'subject' => 'required|string|max:255',
             'description' => 'nullable|string',
             'date' => 'required|date',
-            'hours' => 'nullable|integer|min:0',
+            'hours' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string',
         ]);
 
@@ -92,7 +92,7 @@ class StudyController extends Controller
             'subject' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
             'date' => 'sometimes|required|date',
-            'hours' => 'nullable|integer|min:0',
+            'hours' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string',
         ]);
 
